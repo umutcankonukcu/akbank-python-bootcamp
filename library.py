@@ -14,10 +14,27 @@ class Library:
             ("1)List", self.list_books),
             ("2)Add", self.add_book_entry),
             ("3)Remove", self.remove_book_entry),
-            ("4)EXIT", self.quit)
+            ("Q)EXIT", self.quit)
         ]
+        
         self.display_buttons()
+        text = tk.Label(text="You can Click the Button ",font='Times 20')
+        text.pack()
+        text.place(x=100,y=80)
+        self.button_number()
+        
+        
 
+    def button_number(self):
+        text1 = tk.Label(text="Or Choose Number(1/2/3/Q)",font='Times 20')
+        text1.pack()
+        text1.place(x=100,y=120)
+        num = tk.Entry(font=('Times 17'))
+        num.pack()
+        num.place(x=150,y=160,width=40)
+        num_button = tk.Button(text="Submit",command= lambda: self.number_choice(num.get()))
+        num_button.pack()
+        num_button.place(x=150,y=200)
 
     def __del__(self):
         self.file.close()
@@ -151,6 +168,7 @@ class Library:
         
     def display_buttons(self):
         self.destroy_widgets()
+        self.button_number()
         x=10
         y=10
         for text, command in self.buttons:
@@ -158,6 +176,21 @@ class Library:
           button.pack()
           button.place(x=x,y=y)
           y+=80
+
+    def number_choice(self,number):
+        if(number == "1"):
+            self.list_books()
+        elif(number == "2"):
+            self.add_book_entry()
+        elif(number == "3"):
+            self.remove_book_entry()
+        elif(number == "q" or number == "Q"):
+            self.quit()
+        else:
+            error = tk.Label(text="enter valid value")
+            error.pack()
+            error.place(x=110,y=230)
+        
     
     def time(self): 
         self.time_label=tk.Label(bg='white',font='Times 35 bold')
