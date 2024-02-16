@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import Image, ImageTk, ImageOps
 import time
 
 class Library:
@@ -7,7 +8,7 @@ class Library:
         self.file = open(self.filename, "a+")
         self.form = tk.Tk()
         self.form.title('Library')
-        self.form.geometry("800x700")
+        self.form.geometry("1200x700")
         self.form.config(bg="#03A89E")    
         self.time()
         self.buttons = [
@@ -16,16 +17,17 @@ class Library:
             ("3)Remove", self.remove_book_entry),
             ("Q)EXIT", self.quit)
         ]
-        
         self.display_buttons()
-        text = tk.Label(text="You can Click the Button ",font='Times 20')
-        text.pack()
-        text.place(x=100,y=80)
+        self.image()
         self.button_number()
+        
         
         
 
     def button_number(self):
+        text = tk.Label(text="You can Click the Button ",font='Times 20')
+        text.pack()
+        text.place(x=100,y=80)
         text1 = tk.Label(text="Or Choose Number(1/2/3/Q)",font='Times 20')
         text1.pack()
         text1.place(x=100,y=120)
@@ -64,9 +66,7 @@ class Library:
                 text3.pack()
                 text3.place(x=x,y=y)
                 y += 40
-        back =tk.Button(text="Back", command=self.display_buttons,font=('Times 17'),bd=5,activeforeground="Orange")
-        back.pack()
-        back.place(x=10,y=10)
+        self.back()
 
     def add_book_entry(self):
         self.destroy_widgets()
@@ -104,9 +104,7 @@ class Library:
         add = tk.Button(text="Add", command=lambda: self.add_book(book_name.get(), author.get(),page.get(),date.get()),font=('Times 17'))
         add.pack()
         add.place(x=180,y=290)
-        back =tk.Button(text="Back", command=self.display_buttons,font=('Times 17'),bd=5)
-        back.pack()
-        back.place(x=10,y=10)
+        self.back()
         
     def add_book(self,book_name,author,page,date):
         if book_name == "" or author == "":
@@ -123,6 +121,25 @@ class Library:
 
     def remove_book_entry(self):
         self.destroy_widgets()
+        self.file.seek(0) 
+        lines = self.file.read().splitlines()
+        if not lines:
+            text1 = tk.Label(text="No books available.",font='Times 20')
+            text1.pack()
+            text1.place(x=100,y=250)
+        else:
+            text2 = tk.Label(text="List of Books:",font='Times 25 bold underline italic',bd=3)
+            text2.pack()
+            text2.place(x=100,y=250)
+            x = 100
+            y = 310
+            for line in lines:
+                book_info = line.strip().split(',')  
+                book_name = book_info[0]
+                text3 = tk.Label(text=f"Book: {book_name}",font='Times 17',relief="groove")
+                text3.pack()
+                text3.place(x=x,y=y)
+                y += 40
         book_name_txt = tk.Label(text="Book Name: ",font=('Times 17'))
         book_name_txt.pack()
         book_name_txt.place(x=100,y=80)
@@ -132,9 +149,9 @@ class Library:
         Remove = tk.Button(text="Remove", command=lambda: self.remove_book(book_name.get()),font=('Times 17'))
         Remove.pack()
         Remove.place(x=160,y=150)
-        back =tk.Button(text="Back", command=self.display_buttons,font=('Times 17'))
-        back.pack()
-        back.place(x=10,y=10)
+        
+        self.back()
+        
 
     def remove_book(self, book_name):
         self.file.seek(0)
@@ -168,6 +185,7 @@ class Library:
         
     def display_buttons(self):
         self.destroy_widgets()
+        self.image()
         self.button_number()
         x=10
         y=10
@@ -176,6 +194,7 @@ class Library:
           button.pack()
           button.place(x=x,y=y)
           y+=80
+        
 
     def number_choice(self,number):
         if(number == "1"):
@@ -190,7 +209,11 @@ class Library:
             error = tk.Label(text="enter valid value")
             error.pack()
             error.place(x=110,y=230)
-        
+    
+    def back(self):
+        back =tk.Button(text="Back", command=self.display_buttons,font=('Times 17'),bd=5,activeforeground="Orange")
+        back.pack()
+        back.place(x=10,y=10)
     
     def time(self): 
         self.time_label=tk.Label(bg='white',font='Times 35 bold')
@@ -200,6 +223,16 @@ class Library:
         self.time_label.config(text= current_time)
         self.form.after(1000,self.time)
         return current_time
+    
+    def image(self):
+        self.original_image = Image.open("book1.png")
+        self.new_width = 200
+        self.new_height = 200
+        self.resized_image = ImageOps.fit(self.original_image, (self.new_width, self.new_height))
+        self.my_image = ImageTk.PhotoImage(self.resized_image)
+        lbl = tk.Label(image=self.my_image, bd=1)
+        lbl.pack()
+        lbl.place(x=500, y=100)
 
     def run(self):
         self.form.mainloop()
