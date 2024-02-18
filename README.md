@@ -8,8 +8,8 @@ This is a simple command-line Library Management System implemented in Python. I
 ### How to Use
 
 1. Make sure you have Python installed on your system.
-2. Download the `library_management.py` file.
-3. Run the script using the command `python library_management.py`.
+2. Download the `library.py` file.
+3. Run the script using the command `python library.py`.
 4. Follow the on-screen menu to perform various operations.
 
 #### Menu Options
